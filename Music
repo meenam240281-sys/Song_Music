@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalmFlow | Focus Music for Productivity</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #6b8cbc;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --gray: #95a5a6;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: #f0f5ff;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            font-size: 2.2rem;
+        }
+        
+        .logo h1 {
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .tagline {
+            font-size: 1rem;
+            opacity: 0.9;
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .tagline {
+                display: block;
+            }
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        @media (min-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr 350px;
+            }
+        }
+        
+        .player-section {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            order: 1;
+        }
+        
+        @media (min-width: 992px) {
+            .player-section {
+                order: 0;
+            }
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--accent);
+        }
+        
+        .now-playing {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        @media (min-width: 768px) {
+            .now-playing {
+                flex-direction: row;
+                align-items: center;
+                gap: 30px;
+            }
+        }
+        
+        .album-cover {
+            width: 180px;
+            height: 180px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .album-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .song-info {
+            flex: 1;
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .song-info {
+                text-align: left;
+            }
+        }
+        
+        .song-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .song-artist {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .song-description {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-top: 10px;
+        }
+        
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+        
+        .progress-area {
+            width: 100%;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            border-radius: inherit;
+            position: relative;
+        }
+        
+        .progress::after {
+            content: '';
+            position: absolute;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .timer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background-color: rgba(74, 111, 165, 0.1);
+        }
+        
+        .play-pause {
+            font-size: 2.2rem;
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .play-pause:hover {
+            background-color: var(--secondary);
+        }
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .volume-control i {
+            color: var(--primary);
+        }
+        
+        .volume-slider {
+            width: 120px;
+            height: 5px;
+            -webkit-appearance: none;
+            background: #e0e0e0;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+        
+        .playlist {
+            margin-top: 25px;
+        }
+        
+        .playlist h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .playlist-items {
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 10px;
+            border: 1px solid #eee;
+        }
+        
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .playlist-item:hover {
+            background-color: rgba(74, 111, 165, 0.05);
+        }
+        
+        .playlist-item.active {
+            background-color: rgba(74, 111, 165, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .playlist-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        
+        .playlist-item-info h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .playlist-item-info p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .tools-section {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .focus-timer {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f7ff, #e3eeff);
+            border-radius: 12px;
+        }
+        
+        .timer-display {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .timer-btn {
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .timer-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .timer-btn.secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .timer-btn.secondary:hover {
+            background-color: rgba(74, 111, 165, 0.1);
+        }
+        
+        .productivity-tools h3 {
+            margin-bottom: 15px;
+        }
+        
+        .tool-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .tool-item:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        
+        .tool-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .tool-info p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .lyrics-suppression {
+            background-color: #f0f7ff;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .lyrics-suppression h3 {
+            margin-bottom: 10px;
+        }
+        
+        .suppression-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--success);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .timer-display {
+                font-size: 2.8rem;
+            }
+            
+            .song-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-headphones-alt"></i>
+                    </div>
+                    <div>
+                        <h1>CalmFlow</h1>
+                        <p>Focus Music • No Lyrics • Maximum Productivity</p>
+                    </div>
+                </div>
+                <div class="tagline">
+                    <p>Instrumental music to calm your mind and enhance focus</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="player-section">
+                <h2 class="section-title"><i class="fas fa-play-circle"></i> Now Playing</h2>
+                
+                <div class="now-playing">
+                    <div class="album-cover">
+                        <img id="current-album-cover" src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Album Cover">
+                    </div>
+                    <div class="song-info">
+                        <h2 class="song-title" id="current-song-title">Ambient Study Session</h2>
+                        <p class="song-artist" id="current-song-artist">Focus Waves</p>
+                        <p class="song-description" id="current-song-description">A calming ambient track with suppressed vocals to enhance concentration and reduce distractions.</p>
+                    </div>
+                </div>
+                
+                <div class="player-controls">
+                    <div class="progress-area">
+                        <div class="progress-bar" id="progress-bar">
+                            <div class="progress" id="progress"></div>
+                        </div>
+                        <div class="timer">
+                            <span class="current-time" id="current-time">0:00</span>
+                            <span class="song-duration" id="song-duration">0:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="controls">
+                        <button class="control-btn" id="prev-btn" title="Previous">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button class="control-btn play-pause" id="play-pause-btn" title="Play/Pause">
+                            <i class="fas fa-play" id="play-pause-icon"></i>
+                        </button>
+                        <button class="control-btn" id="next-btn" title="Next">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="volume-control">
+                        <i class="fas fa-volume-up"></i>
+                        <input type="range" min="0" max="100" value="70" class="volume-slider" id="volume-slider">
+                    </div>
+                </div>
+                
+                <div class="playlist">
+                    <h3><i class="fas fa-list-music"></i> Focus Playlist</h3>
+                    <div class="playlist-items" id="playlist-items">
+                        <!-- Playlist items will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tools-section">
+                <div class="focus-timer">
+                    <h3><i class="fas fa-clock"></i> Focus Timer</h3>
+                    <div class="timer-display" id="timer-display">25:00</div>
+                    <div class="timer-controls">
+                        <button class="timer-btn" id="start-timer">Start</button>
+                        <button class="timer-btn secondary" id="pause-timer">Pause</button>
+                        <button class="timer-btn secondary" id="reset-timer">Reset</button>
+                    </div>
+                    <div class="timer-presets">
+                        <button class="timer-btn secondary" data-minutes="25">25 min</button>
+                        <button class="timer-btn secondary" data-minutes="50">50 min</button>
+                        <button class="timer-btn secondary" data-minutes="90">90 min</button>
+                    </div>
+                </div>
+                
+                <div class="productivity-tools">
+                    <h3 class="section-title"><i class="fas fa-tools"></i> Productivity Tools</h3>
+                    
+                    <div class="tool-item" id="task-list-btn">
+                        <div class="tool-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="tool-info">
+                            <h4>Task List</h4>
+                            <p>Create a focused to-do list for your work session</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-item" id="distraction-log-btn">
+                        <div class="tool-icon">
+                            <i class="fas fa-ban"></i>
+                        </div>
+                        <div class="tool-info">
+                            <h4>Distraction Log</h4>
+                            <p>Track distractions to improve focus over time</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-item" id="break-reminder-btn">
+                        <div class="tool-icon">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                        <div class="tool-info">
+                            <h4>Break Reminder</h4>
+                            <p>Get notified when it's time to take a short break</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lyrics-suppression">
+                    <h3><i class="fas fa-volume-mute"></i> Lyrics Suppression</h3>
+                    <p>All vocals are removed or suppressed to minimize distraction and help maintain focus on your work.</p>
+                    <div class="suppression-status">
+                        <i class="fas fa-check-circle"></i>
+                        <span>LYRICS SUPPRESSED</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>CalmFlow &copy; 2023 | Designed for focus, productivity, and mental calm</p>
+            <p>All music tracks are instrumental or have suppressed lyrics to minimize distraction</p>
+        </footer>
+    </div>
+
+    <script>
+        // Music player functionality
+        const audio = new Audio();
+        const playlistItems = document.getElementById('playlist-items');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progress = document.getElementById('progress');
+        const currentTimeEl = document.getElementById('current-time');
+        const songDurationEl = document.getElementById('song-duration');
+        const volumeSlider = document.getElementById('volume-slider');
+        const currentSongTitle = document.getElementById('current-song-title');
+        const currentSongArtist = document.getElementById('current-song-artist');
+        const currentSongDescription = document.getElementById('current-song-description');
+        const currentAlbumCover = document.getElementById('current-album-cover');
+        
+        // Focus timer functionality
+        const timerDisplay = document.getElementById('timer-display');
+        const startTimerBtn = document.getElementById('start-timer');
+        const pauseTimerBtn = document.getElementById('pause-timer');
+        const resetTimerBtn = document.getElementById('reset-timer');
+        const timerPresets = document.querySelectorAll('.timer-presets button');
+        
+        // Playlist data - instrumental or lyric-suppressed tracks
+        const playlist = [
+            {
+                id: 1,
+                title: "Ambient Study Session",
+                artist: "Focus Waves",
+                description: "A calming ambient track with suppressed vocals to enhance concentration and reduce distractions.",
+                src: "https://assets.codepen.io/605876/long-interlude-by-kevin-macleod-from-filmmusic-io.mp3",
+                duration: "3:45",
+                cover: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 2,
+                title: "Deep Focus Flow",
+                artist: "Productivity Beats",
+                description: "Minimal beats with no lyrics, designed for deep work and coding sessions.",
+                src: "https://assets.codepen.io/605876/study-music-by-kevin-macleod-from-filmmusic-io.mp3",
+                duration: "4:20",
+                cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 3,
+                title: "Calm Coding Atmosphere",
+                artist: "Code Harmony",
+                description: "Soothing instrumental music to maintain flow state during programming.",
+                src: "https://assets.codepen.io/605876/almost-bliss-silent-partner.mp3",
+                duration: "3:30",
+                cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 4,
+                title: "Mindful Work Rhythm",
+                artist: "Zen Tunes",
+                description: "Gentle, lyric-free music to help you stay present and focused on tasks.",
+                src: "https://assets.codepen.io/605876/boynton-beach-by-kevin-macleod-from-filmmusic-io.mp3",
+                duration: "5:10",
+                cover: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 5,
+                title: "Productivity Pulse",
+                artist: "Flow State Collective",
+                description: "Upbeat instrumental track to energize work sessions without lyrical distraction.",
+                src: "https://assets.codepen.io/605876/cold-sober-silent-partner.mp3",
+                duration: "4:05",
+                cover: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            }
+        ];
+        
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let timerInterval;
+        let timerMinutes = 25;
+        let timerSeconds = 0;
+        let isTimerRunning = false;
+        
+        // Initialize the player
+        function initPlayer() {
+            loadSong(currentSongIndex);
+            renderPlaylist();
+            
+            // Set initial volume
+            audio.volume = volumeSlider.value / 100;
+            
+            // Update time as audio plays
+            audio.addEventListener('timeupdate', updateProgress);
+            
+            // When song ends, play next
+            audio.addEventListener('ended', nextSong);
+            
+            // Play/pause button click
+            playPauseBtn.addEventListener('click', togglePlay);
+            
+            // Previous button click
+            prevBtn.addEventListener('click', prevSong);
+            
+            // Next button click
+            nextBtn.addEventListener('click', nextSong);
+            
+            // Progress bar click
+            progressBar.addEventListener('click', setProgress);
+            
+            // Volume slider change
+            volumeSlider.addEventListener('input', changeVolume);
+        }
+        
+        // Load a song into the player
+        function loadSong(index) {
+            const song = playlist[index];
+            audio.src = song.src;
+            currentSongTitle.textContent = song.title;
+            currentSongArtist.textContent = song.artist;
+            currentSongDescription.textContent = song.description;
+            currentAlbumCover.src = song.cover;
+            songDurationEl.textContent = song.duration;
+            
+            // Update active item in playlist
+            const playlistItems = document.querySelectorAll('.playlist-item');
+            playlistItems.forEach(item => item.classList.remove('active'));
+            playlistItems[index].classList.add('active');
+        }
+        
+        // Render the playlist
+        function renderPlaylist() {
+            playlistItems.innerHTML = '';
+            
+            playlist.forEach((song, index) => {
+                const item = document.createElement('div');
+                item.className = `playlist-item ${index === currentSongIndex ? 'active' : ''}`;
+                item.innerHTML = `
+                    <img src="${song.cover}" alt="${song.title}">
+                    <div class="playlist-item-info">
+                        <h4>${song.title}</h4>
+                        <p>${song.artist} • ${song.duration}</p>
+                    </div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    currentSongIndex = index;
+                    loadSong(currentSongIndex);
+                    if (isPlaying) {
+                        audio.play();
+                    }
+                });
+                
+                playlistItems.appendChild(item);
+            });
+        }
+        
+        // Toggle play/pause
+        function togglePlay() {
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        }
+        
+        // Play the current song
+        function playSong() {
+            isPlaying = true;
+            audio.play();
+            playPauseIcon.classList.remove('fa-play');
+            playPauseIcon.classList.add('fa-pause');
+            playPauseBtn.title = "Pause";
+        }
+        
+        // Pause the current song
+        function pauseSong() {
+            isPlaying = false;
+            audio.pause();
+            playPauseIcon.classList.remove('fa-pause');
+            playPauseIcon.classList.add('fa-play');
+            playPauseBtn.title = "Play";
+        }
+        
+        // Play previous song
+        function prevSong() {
+            currentSongIndex--;
+            if (currentSongIndex < 0) {
+                currentSongIndex = playlist.length - 1;
+            }
+            loadSong(currentSongIndex);
+            if (isPlaying) {
+                audio.play();
+            }
+        }
+        
+        // Play next song
+        function nextSong() {
+            currentSongIndex++;
+            if (currentSongIndex >= playlist.length) {
+                currentSongIndex = 0;
+            }
+            loadSong(currentSongIndex);
+            if (isPlaying) {
+                audio.play();
+            }
+        }
+        
+        // Update progress bar
+        function updateProgress() {
+            const { duration, currentTime } = audio;
+            
+            // Update progress bar width
+            const progressPercent = (currentTime / duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+            
+            // Update time display
+            const formatTime = (time) => {
+                const minutes = Math.floor(time / 60);
+                const seconds = Math.floor(time % 60);
+                return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            };
+            
+            currentTimeEl.textContent = formatTime(currentTime);
+            
+            if (duration) {
+                songDurationEl.textContent = formatTime(duration);
+            }
+        }
+        
+        // Set progress when clicking on progress bar
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            
+            audio.currentTime = (clickX / width) * duration;
+        }
+        
+        // Change volume
+        function changeVolume() {
+            audio.volume = volumeSlider.value / 100;
+        }
+        
+        // Focus timer functionality
+        function initTimer() {
+            updateTimerDisplay();
+            
+            startTimerBtn.addEventListener('click', startTimer);
+            pauseTimerBtn.addEventListener('click', pauseTimer);
+            resetTimerBtn.addEventListener('click', resetTimer);
+            
+            timerPresets.forEach(button => {
+                button.addEventListener('click', () => {
+                    timerMinutes = parseInt(button.getAttribute('data-minutes'));
+                    timerSeconds = 0;
+                    updateTimerDisplay();
+                    if (isTimerRunning) {
+                        clearInterval(timerInterval);
+                        startTimer();
+                    }
+                });
+            });
+        }
+        
+        // Start the timer
+        function startTimer() {
+            if (isTimerRunning) return;
+            
+            isTimerRunning = true;
+            startTimerBtn.disabled = true;
+            pauseTimerBtn.disabled = false;
+            
+            timerInterval = setInterval(() => {
+                if (timerSeconds === 0) {
+                    if (timerMinutes === 0) {
+                        // Timer completed
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        startTimerBtn.disabled = false;
+                        alert("Focus session complete! Time for a short break.");
+                        return;
+                    }
+                    timerMinutes--;
+                    timerSeconds = 59;
+                } else {
+                    timerSeconds--;
+                }
+                
+                updateTimerDisplay();
+            }, 1000);
+        }
+        
+        // Pause the timer
+        function pauseTimer() {
+            if (!isTimerRunning) return;
+            
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            startTimerBtn.disabled = false;
+            pauseTimerBtn.disabled = true;
+        }
+        
+        // Reset the timer
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timerMinutes = 25;
+            timerSeconds = 0;
+            updateTimerDisplay();
+            startTimerBtn.disabled = false;
+            pauseTimerBtn.disabled = false;
+        }
+        
+        // Update timer display
+        function updateTimerDisplay() {
+            const displayMinutes = timerMinutes < 10 ? `0${timerMinutes}` : timerMinutes;
+            const displaySeconds = timerSeconds < 10 ? `0${timerSeconds}` : timerSeconds;
+            timerDisplay.textContent = `${displayMinutes}:${displaySeconds}`;
+        }
+        
+        // Initialize productivity tools
+        function initTools() {
+            document.getElementById('task-list-btn').addEventListener('click', () => {
+                alert("Task List feature would open here. This would allow you to create and manage tasks for your focus session.");
+            });
+            
+            document.getElementById('distraction-log-btn').addEventListener('click', () => {
+                alert("Distraction Log would open here. Track what distracts you to improve focus over time.");
+            });
+            
+            document.getElementById('break-reminder-btn').addEventListener('click', () => {
+                alert("Break Reminder settings would open here. Set intervals for short breaks during long work sessions.");
+            });
+        }
+        
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initPlayer();
+            initTimer();
+            initTools();
+            
+            // Auto-play first song (with user interaction required for some browsers)
+            document.body.addEventListener('click', function initPlay() {
+                if (!isPlaying) {
+                    playSong();
+                }
+                document.body.removeEventListener('click', initPlay);
+            });
+        });
+    </script>
+</body>
+</html>
